@@ -1,0 +1,8 @@
+.idea/
+
+.env
+postgres_db/
+
+# Logs
+log/go/*
+!log/*/.gitkeep
