@@ -1,14 +1,14 @@
 package migrations
 
 import (
-	"go_forum/main/models"
+	"go_forum/main/database/entity"
 	"gorm.io/gorm"
 	"log"
 	"os"
 )
 
 func AutoMigrate(DB *gorm.DB) {
-	err := DB.AutoMigrate(models.User{}, models.Thread{}, models.Reply{})
+	err := DB.AutoMigrate(entity.User{}, entity.Thread{}, entity.Reply{})
 
 	if err != nil {
 		log.Println(err)
