@@ -12,8 +12,8 @@ import (
 
 func init() {
 	initLogger()
-	initViper()                               //Configs engine.
-	migrations.AutoMigrate(database.InitDB()) //AutoMigrate models.
+	initViper()                                   //Configs engine.
+	migrations.AutoMigrate(database.Connection()) //AutoMigrate models.
 }
 
 func main() {
@@ -36,7 +36,7 @@ func run() int {
 	return 0
 }
 
-// Init viper configs engine.
+// initViper - sets up viper configs engine.
 func initViper() {
 	viper.SetConfigType("env")
 	viper.AddConfigPath(".")
@@ -48,7 +48,7 @@ func initViper() {
 	}
 }
 
-// Configure logger
+// initLogger - configure logger
 func initLogger() {
 	file, err := os.OpenFile("./log/go/log.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {

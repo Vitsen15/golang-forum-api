@@ -10,7 +10,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func InitDB() *gorm.DB {
+func Connection() *gorm.DB {
 	DSN := fmt.Sprintf("postgres://%s:%s@%s:5432/%s",
 		viper.Get("POSTGRES_DB_USER"),
 		viper.Get("POSTGRES_DB_USER_PASSWD"),
