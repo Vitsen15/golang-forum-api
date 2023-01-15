@@ -4,8 +4,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 	"go_forum/main/database"
-	"go_forum/main/helper/seeder"
-	"go_forum/main/migrations"
+	"go_forum/main/database/migrations"
+	"go_forum/main/database/seed"
 	"log"
 	"net/http"
 	"os"
@@ -15,7 +15,7 @@ func init() {
 	initLogger()
 	initViper()                                   //Configs engine.
 	migrations.AutoMigrate(database.Connection()) //AutoMigrate models.
-	seeder.Run()                                  // Run seeds only once.
+	seed.Run()                                    // Run seeds only once.
 }
 
 func main() {

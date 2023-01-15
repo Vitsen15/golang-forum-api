@@ -1,8 +1,7 @@
-package seeder
+package seed
 
 import (
 	"go_forum/main/database"
-	"go_forum/main/database/seed"
 	"log"
 	"os"
 )
@@ -13,7 +12,7 @@ func Run() {
 	if _, err := os.Stat(isDatabaseSeededFileName); err != nil {
 		log.Println("File doesn't exist")
 		log.Println("Seeding")
-		for _, seeder := range seed.All() {
+		for _, seeder := range All() {
 			if err := seeder.Run(database.Connection()); err != nil {
 				log.Printf("Running seeder '%s', failed with error: %s\n", seeder.Name, err)
 				os.Exit(1)
