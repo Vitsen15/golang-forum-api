@@ -2,7 +2,7 @@ package factory
 
 import (
 	"github.com/go-faker/faker/v4"
-	"go_forum/main/database/entity"
+	"go_forum/main/entity"
 	"go_forum/main/helper"
 	"go_forum/main/security"
 	"log"

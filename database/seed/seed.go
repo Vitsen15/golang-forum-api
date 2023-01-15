@@ -1,8 +1,8 @@
 package seed
 
 import (
-	"go_forum/main/database/entity"
-	"go_forum/main/database/entity/factory"
+	"go_forum/main/entity"
+	"go_forum/main/entity/factory"
 	"gorm.io/gorm"
 )
 
