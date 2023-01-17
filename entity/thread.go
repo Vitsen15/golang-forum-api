@@ -6,13 +6,13 @@ import (
 )
 
 type Thread struct {
-	ID        uint           `gorm:"primarykey"  json:"id" faker:"-"`
-	UserID    uint           `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" faker:"-"`
-	User      User           `json:"User" faker:"-"`
-	Replies   []Reply        `json:"Replies" faker:"-"`
-	Title     string         `gorm:"size:255" json:"Title" faker:"sentence"`
-	Body      string         `gorm:"type:text" json:"Body" faker:"paragraph"`
-	CreatedAt time.Time      `gorm:"default:CURRENT_TIMESTAMP" faker:"-"`
-	UpdatedAt time.Time      `gorm:"default:CURRENT_TIMESTAMP" faker:"-"`
-	DeletedAt gorm.DeletedAt `gorm:"index" faker:"-"`
+	ID        uint           `gorm:"primarykey" json:"ID" faker:"-"`
+	UserID    uint           `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"UserID,string" binding:"required" faker:"-"`
+	User      User           `json:"-" faker:"-"`
+	Replies   []Reply        `json:"-" faker:"-"`
+	Title     string         `gorm:"size:255" json:"Title" binding:"required" faker:"sentence"`
+	Body      string         `gorm:"type:text" json:"Body" binding:"required" faker:"paragraph"`
+	CreatedAt time.Time      `gorm:"default:CURRENT_TIMESTAMP" json:"-" faker:"-"`
+	UpdatedAt time.Time      `gorm:"default:CURRENT_TIMESTAMP" json:"-" faker:"-"`
+	DeletedAt gorm.DeletedAt `gorm:"index" json:"-" faker:"-"`
 }
