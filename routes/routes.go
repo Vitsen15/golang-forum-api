@@ -25,5 +25,8 @@ func Start() error {
 	router.PUT("/thread/:id", Handler.UpdateThread)
 	router.DELETE("/thread/:id", Handler.DeleteThread)
 
+	//Reply routes.
+	router.GET("/reply/:id", Handler.GetReplyById)
+
 	return router.Run(":8080")
 }
