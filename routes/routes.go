@@ -20,6 +20,7 @@ func Start() error {
 	// Thread routes.
 	router.GET("/thread", Handler.GetAllThreads)
 	router.GET("/thread/:id", Handler.GetThreadById)
+	router.GET("/thread/:id/replies", Handler.GetThreadRepliesById)
 	router.POST("/thread", Handler.CreateThread)
 	router.PUT("/thread/:id", Handler.UpdateThread)
 	router.DELETE("/thread/:id", Handler.DeleteThread)

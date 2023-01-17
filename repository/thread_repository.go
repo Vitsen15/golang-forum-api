@@ -10,6 +10,11 @@ func (repository *Repository) GetThreadById(id uint) (thread entity.Thread, err 
 	return
 }
 
+func (repository *Repository) GetThreadRepliesById(id uint) (replies []entity.Reply, err error) {
+	err = repository.Db.Find(&replies).Where("thread_id", id).Error
+	return
+}
+
 func (repository *Repository) GetAllThreads() (thread []entity.Thread, err error) {
 	err = repository.Db.Find(&thread).Error
 	return

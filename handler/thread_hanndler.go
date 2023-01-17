@@ -34,6 +34,25 @@ func (handler *Handler) GetThreadById(c *gin.Context) {
 	c.JSON(http.StatusOK, thread)
 }
 
+func (handler *Handler) GetThreadRepliesById(c *gin.Context) {
+	ID, castErr := strconv.ParseUint(c.Param("id"), 10, 32)
+
+	if castErr != nil {
+		log.Println(castErr)
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": castErr.Error()})
+		return
+	}
+
+	replies, searchErr := handler.Repository.GetThreadRepliesById(uint(ID))
+
+	if searchErr != nil {
+		log.Println(searchErr)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": searchErr.Error()})
+	}
+
+	c.JSON(http.StatusOK, replies)
+}
+
 func (handler *Handler) GetAllThreads(c *gin.Context) {
 	threads, getErr := handler.Repository.GetAllThreads()
 
