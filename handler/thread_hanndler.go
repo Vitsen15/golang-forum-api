@@ -69,6 +69,7 @@ func (handler *Handler) CreateThread(c *gin.Context) {
 	thread := entity.Thread{}
 
 	if err := c.ShouldBindJSON(&thread); err != nil {
+		log.Println(err)
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
@@ -96,6 +97,7 @@ func (handler *Handler) UpdateThread(c *gin.Context) {
 	thread := entity.Thread{}
 
 	if err := c.ShouldBindJSON(&thread); err != nil {
+		log.Println(err)
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
@@ -129,9 +131,11 @@ func (handler *Handler) DeleteThread(c *gin.Context) {
 	deleteErr := handler.Repository.DeleteThreadById(uint(ID))
 
 	if deleteErr != nil && errors.Is(gorm.ErrRecordNotFound, deleteErr) {
+		log.Println(deleteErr)
 		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"message": deleteErr.Error()})
 		return
 	} else if deleteErr != nil {
+		log.Println(deleteErr)
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": deleteErr.Error()})
 		return
 	}
