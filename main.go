@@ -1,13 +1,12 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 	"go_forum/main/database"
 	"go_forum/main/database/migrations"
 	"go_forum/main/database/seed"
+	"go_forum/main/routes"
 	"log"
-	"net/http"
 	"os"
 )
 
@@ -23,14 +22,7 @@ func main() {
 }
 
 func run() int {
-	r := gin.New()
-	r.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "API server is working!",
-		})
-	})
-
-	if err := r.Run(":8080"); err != nil {
+	if err := routes.Start(); err != nil {
 		log.Println(err)
 		return 1
 	}
