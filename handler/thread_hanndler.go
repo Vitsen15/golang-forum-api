@@ -107,8 +107,14 @@ func (handler *Handler) DeleteThread(c *gin.Context) {
 		return
 	}
 
-	if deleteErr := handler.Repository.DeleteThreadById(uint(ID)); deleteErr != nil {
+	deleteErr := handler.Repository.DeleteThreadById(uint(ID))
+
+	if deleteErr != nil && errors.Is(gorm.ErrRecordNotFound, deleteErr) {
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"message": deleteErr.Error()})
+		return
+	} else if deleteErr != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": deleteErr.Error()})
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Thread has been deleted successfully."})

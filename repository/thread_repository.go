@@ -2,6 +2,7 @@ package repository
 
 import (
 	"go_forum/main/entity"
+	"gorm.io/gorm"
 )
 
 func (repository *Repository) GetThreadById(id uint) (thread entity.Thread, err error) {
@@ -26,6 +27,10 @@ func (repository *Repository) UpdateThread(thread entity.Thread) (err error) {
 
 func (repository *Repository) DeleteThreadById(id uint) (err error) {
 	thread := entity.Thread{ID: id}
-	err = repository.Db.Delete(&thread).Error
+
+	if repository.Db.Delete(&thread).RowsAffected == 0 {
+		err = gorm.ErrRecordNotFound
+	}
+
 	return
 }
