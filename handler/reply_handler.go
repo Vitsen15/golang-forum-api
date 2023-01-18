@@ -3,6 +3,7 @@ package handler
 import (
 	"errors"
 	"github.com/gin-gonic/gin"
+	"go_forum/main/entity"
 	"gorm.io/gorm"
 	"log"
 	"net/http"
@@ -31,4 +32,24 @@ func (handler *Handler) GetReplyById(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, reply)
+}
+
+func (handler *Handler) CreateReply(c *gin.Context) {
+	reply := entity.Reply{}
+
+	if err := c.ShouldBindJSON(&reply); err != nil {
+		log.Println(err)
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
+	}
+
+	createErr := handler.Repository.CreateReply(reply)
+
+	if createErr != nil {
+		log.Println(createErr)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": createErr.Error()})
+		return
+	}
+
+	c.JSON(http.StatusCreated, gin.H{"message": "Reply created."})
 }

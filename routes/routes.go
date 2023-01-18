@@ -27,6 +27,7 @@ func Start() error {
 
 	//Reply routes.
 	router.GET("/reply/:id", Handler.GetReplyById)
+	router.POST("/reply", Handler.CreateReply)
 
 	return router.Run(":8080")
 }
