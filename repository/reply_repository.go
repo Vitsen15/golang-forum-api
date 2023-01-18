@@ -26,3 +26,16 @@ func (repository *Repository) UpdateReply(reply entity.Reply) (err error) {
 
 	return
 }
+
+func (repository *Repository) DeleteReplyById(id uint) (err error) {
+	reply := entity.Reply{ID: id}
+	result := repository.Db.Delete(&reply)
+
+	if result.RowsAffected == 0 {
+		err = gorm.ErrRecordNotFound
+	} else if result.Error != nil {
+		err = result.Error
+	}
+
+	return
+}

@@ -2,12 +2,13 @@ package handler
 
 import (
 	"errors"
-	"github.com/gin-gonic/gin"
 	"go_forum/main/entity"
-	"gorm.io/gorm"
 	"log"
 	"net/http"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 func (handler *Handler) GetReplyById(c *gin.Context) {
@@ -84,4 +85,28 @@ func (handler *Handler) UpdateReply(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Reply updated successfully."})
+}
+
+func (handler *Handler) DeleteReply(c *gin.Context) {
+	id, castErr := strconv.ParseUint(c.Param("id"), 10, 32)
+
+	if castErr != nil {
+		log.Println(castErr)
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": castErr.Error()})
+		return
+	}
+
+	deleteErr := handler.Repository.DeleteReplyById(uint(id))
+
+	if deleteErr != nil && errors.Is(gorm.ErrRecordNotFound, deleteErr) {
+		log.Println(deleteErr)
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"message": deleteErr.Error()})
+		return
+	} else if deleteErr != nil {
+		log.Println(deleteErr)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": deleteErr.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Reply has been deleted successfully."})
 }
