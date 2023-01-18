@@ -1,13 +1,14 @@
 package main
 
 import (
-	"github.com/spf13/viper"
 	"go_forum/main/database"
 	"go_forum/main/database/migrations"
 	"go_forum/main/database/seed"
 	"go_forum/main/routes"
 	"log"
 	"os"
+
+	"github.com/spf13/viper"
 )
 
 func init() {
@@ -22,7 +23,7 @@ func main() {
 }
 
 func run() int {
-	if err := routes.Start(); err != nil {
+	if err := routes.Run(); err != nil {
 		log.Println(err)
 		return 1
 	}

@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Start() error {
+func Run() error {
 	var router = gin.New()
 
 	Repository := repository.CreateRepository(database.Connection())
