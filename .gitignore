@@ -1,5 +1,6 @@
 .idea/
 .vscode/
+isSeeded
 
 .env
 postgres_db/
