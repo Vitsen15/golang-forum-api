@@ -16,8 +16,12 @@ func (repository *Repository) CreateReply(reply entity.Reply) (err error) {
 }
 
 func (repository *Repository) UpdateReply(reply entity.Reply) (err error) {
-	if repository.Db.Updates(&reply).RowsAffected == 0 {
+	result := repository.Db.Updates(&reply)
+
+	if result.RowsAffected == 0 {
 		err = gorm.ErrRecordNotFound
+	} else if result.Error != nil {
+		err = result.Error
 	}
 
 	return

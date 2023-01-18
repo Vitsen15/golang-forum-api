@@ -26,15 +26,25 @@ func (repository *Repository) CreateThread(thread entity.Thread) (err error) {
 }
 
 func (repository *Repository) UpdateThread(thread entity.Thread) (err error) {
-	err = repository.Db.Updates(&thread).Error
+	result := repository.Db.Updates(&thread)
+
+	if result.RowsAffected == 0 {
+		err = gorm.ErrRecordNotFound
+	} else if result.Error != nil {
+		err = result.Error
+	}
+
 	return
 }
 
 func (repository *Repository) DeleteThreadById(id uint) (err error) {
 	thread := entity.Thread{ID: id}
+	result := repository.Db.Delete(&thread)
 
-	if repository.Db.Delete(&thread).RowsAffected == 0 {
+	if result.RowsAffected == 0 {
 		err = gorm.ErrRecordNotFound
+	} else if result.Error != nil {
+		err = result.Error
 	}
 
 	return
