@@ -3,6 +3,7 @@ package handler
 import (
 	"errors"
 	"go_forum/main/entity"
+	"go_forum/main/repository"
 	"log"
 	"net/http"
 	"strconv"
@@ -11,7 +12,15 @@ import (
 	"gorm.io/gorm"
 )
 
-func (handler *Handler) GetReplyById(c *gin.Context) {
+type ReplyHandler struct {
+	repository repository.ReplyRepository
+}
+
+func CreateReplyHandler(repository repository.ReplyRepository) *ReplyHandler {
+	return &ReplyHandler{repository: repository}
+}
+
+func (handler *ReplyHandler) GetReplyById(c *gin.Context) {
 	id, castErr := strconv.ParseUint(c.Param("id"), 10, 32)
 
 	if castErr != nil {
@@ -20,7 +29,7 @@ func (handler *Handler) GetReplyById(c *gin.Context) {
 		return
 	}
 
-	reply, searchErr := handler.Repository.GetReplyById(uint(id))
+	reply, searchErr := handler.repository.Get(uint(id))
 
 	if searchErr != nil && errors.Is(searchErr, gorm.ErrRecordNotFound) {
 		log.Println(searchErr)
@@ -35,7 +44,7 @@ func (handler *Handler) GetReplyById(c *gin.Context) {
 	c.JSON(http.StatusOK, reply)
 }
 
-func (handler *Handler) CreateReply(c *gin.Context) {
+func (handler *ReplyHandler) CreateReply(c *gin.Context) {
 	reply := entity.Reply{}
 
 	if err := c.ShouldBindJSON(&reply); err != nil {
@@ -44,7 +53,7 @@ func (handler *Handler) CreateReply(c *gin.Context) {
 		return
 	}
 
-	createErr := handler.Repository.CreateReply(reply)
+	createErr := handler.repository.Create(&reply)
 
 	if createErr != nil {
 		log.Println(createErr)
@@ -55,7 +64,7 @@ func (handler *Handler) CreateReply(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"message": "Reply created successfully."})
 }
 
-func (handler *Handler) UpdateReply(c *gin.Context) {
+func (handler *ReplyHandler) UpdateReply(c *gin.Context) {
 	id, castErr := strconv.ParseUint(c.Param("id"), 10, 32)
 
 	if castErr != nil {
@@ -72,7 +81,7 @@ func (handler *Handler) UpdateReply(c *gin.Context) {
 		return
 	}
 
-	updateErr := handler.Repository.UpdateReply(reply)
+	updateErr := handler.repository.Update(&reply)
 
 	if updateErr != nil && errors.Is(updateErr, gorm.ErrRecordNotFound) {
 		log.Println(updateErr)
@@ -87,7 +96,7 @@ func (handler *Handler) UpdateReply(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Reply updated successfully."})
 }
 
-func (handler *Handler) DeleteReply(c *gin.Context) {
+func (handler *ReplyHandler) DeleteReply(c *gin.Context) {
 	id, castErr := strconv.ParseUint(c.Param("id"), 10, 32)
 
 	if castErr != nil {
@@ -96,7 +105,7 @@ func (handler *Handler) DeleteReply(c *gin.Context) {
 		return
 	}
 
-	deleteErr := handler.Repository.DeleteReplyById(uint(id))
+	deleteErr := handler.repository.Delete(uint(id))
 
 	if deleteErr != nil && errors.Is(gorm.ErrRecordNotFound, deleteErr) {
 		log.Println(deleteErr)

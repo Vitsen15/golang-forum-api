@@ -2,40 +2,55 @@ package repository
 
 import (
 	"go_forum/main/entity"
+
 	"gorm.io/gorm"
 )
 
-func (repository *Repository) GetReplyById(id uint) (reply entity.Reply, err error) {
-	err = repository.Db.First(&reply, id).Error
-	return
+type ReplyRepository interface {
+	Create(reply *entity.Reply) error
+	Update(reply *entity.Reply) error
+	Delete(id uint) error
+	Get(id uint) (*entity.Reply, error)
 }
 
-func (repository *Repository) CreateReply(reply entity.Reply) (err error) {
-	err = repository.Db.Create(&reply).Error
-	return
+type GORMReplyRepository struct {
+	Db *gorm.DB
 }
 
-func (repository *Repository) UpdateReply(reply entity.Reply) (err error) {
+func CreateGORMReplyRepository(db *gorm.DB) *GORMReplyRepository {
+	return &GORMReplyRepository{Db: db}
+}
+
+func (repository *GORMReplyRepository) Create(reply *entity.Reply) error {
+	return repository.Db.Create(&reply).Error
+}
+
+func (repository *GORMReplyRepository) Update(reply *entity.Reply) error {
 	result := repository.Db.Updates(&reply)
 
 	if result.RowsAffected == 0 {
-		err = gorm.ErrRecordNotFound
+		return gorm.ErrRecordNotFound
 	} else if result.Error != nil {
-		err = result.Error
+		return result.Error
 	}
 
-	return
+	return nil
 }
 
-func (repository *Repository) DeleteReplyById(id uint) (err error) {
+func (repository *GORMReplyRepository) Delete(id uint) error {
 	reply := entity.Reply{ID: id}
 	result := repository.Db.Delete(&reply)
 
 	if result.RowsAffected == 0 {
-		err = gorm.ErrRecordNotFound
+		return gorm.ErrRecordNotFound
 	} else if result.Error != nil {
-		err = result.Error
+		return result.Error
 	}
 
+	return nil
+}
+
+func (repository *GORMReplyRepository) Get(id uint) (reply *entity.Reply, err error) {
+	err = repository.Db.First(&reply, id).Error
 	return
 }

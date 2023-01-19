@@ -2,15 +2,25 @@ package handler
 
 import (
 	"errors"
-	"github.com/gin-gonic/gin"
 	"go_forum/main/entity"
-	"gorm.io/gorm"
+	"go_forum/main/repository"
 	"log"
 	"net/http"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
-func (handler *Handler) GetThreadById(c *gin.Context) {
+type ThreadHandler struct {
+	repository repository.ThreadRepository
+}
+
+func CreateThreadHandler(threadRepository repository.ThreadRepository) *ThreadHandler {
+	return &ThreadHandler{repository: threadRepository}
+}
+
+func (handler *ThreadHandler) GetThreadById(c *gin.Context) {
 	ID, castErr := strconv.ParseUint(c.Param("id"), 10, 32)
 
 	if castErr != nil {
@@ -19,7 +29,7 @@ func (handler *Handler) GetThreadById(c *gin.Context) {
 		return
 	}
 
-	thread, getErr := handler.Repository.GetThreadById(uint(ID))
+	thread, getErr := handler.repository.Get(uint(ID))
 
 	if getErr != nil && errors.Is(getErr, gorm.ErrRecordNotFound) {
 		log.Println(getErr)
@@ -34,7 +44,7 @@ func (handler *Handler) GetThreadById(c *gin.Context) {
 	c.JSON(http.StatusOK, thread)
 }
 
-func (handler *Handler) GetThreadRepliesById(c *gin.Context) {
+func (handler *ThreadHandler) GetThreadRepliesById(c *gin.Context) {
 	ID, castErr := strconv.ParseUint(c.Param("id"), 10, 32)
 
 	if castErr != nil {
@@ -43,7 +53,7 @@ func (handler *Handler) GetThreadRepliesById(c *gin.Context) {
 		return
 	}
 
-	replies, searchErr := handler.Repository.GetThreadRepliesById(uint(ID))
+	replies, searchErr := handler.repository.GetReplies(uint(ID))
 
 	if searchErr != nil {
 		log.Println(searchErr)
@@ -53,8 +63,8 @@ func (handler *Handler) GetThreadRepliesById(c *gin.Context) {
 	c.JSON(http.StatusOK, replies)
 }
 
-func (handler *Handler) GetAllThreads(c *gin.Context) {
-	threads, getErr := handler.Repository.GetAllThreads()
+func (handler *ThreadHandler) GetAllThreads(c *gin.Context) {
+	threads, getErr := handler.repository.GetAll()
 
 	if getErr != nil {
 		log.Println(getErr)
@@ -65,7 +75,7 @@ func (handler *Handler) GetAllThreads(c *gin.Context) {
 	c.JSON(http.StatusOK, threads)
 }
 
-func (handler *Handler) CreateThread(c *gin.Context) {
+func (handler *ThreadHandler) CreateThread(c *gin.Context) {
 	thread := entity.Thread{}
 
 	if err := c.ShouldBindJSON(&thread); err != nil {
@@ -74,7 +84,7 @@ func (handler *Handler) CreateThread(c *gin.Context) {
 		return
 	}
 
-	createErr := handler.Repository.CreateThread(thread)
+	createErr := handler.repository.Create(&thread)
 
 	if createErr != nil {
 		log.Println(createErr)
@@ -85,7 +95,7 @@ func (handler *Handler) CreateThread(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"message": "Thread created."})
 }
 
-func (handler *Handler) UpdateThread(c *gin.Context) {
+func (handler *ThreadHandler) UpdateThread(c *gin.Context) {
 	ID, castIDErr := strconv.ParseUint(c.Param("id"), 10, 32)
 
 	if castIDErr != nil {
@@ -104,7 +114,7 @@ func (handler *Handler) UpdateThread(c *gin.Context) {
 
 	thread.ID = uint(ID)
 
-	updateErr := handler.Repository.UpdateThread(thread)
+	updateErr := handler.repository.Update(&thread)
 
 	if updateErr != nil && errors.Is(updateErr, gorm.ErrRecordNotFound) {
 		log.Println(updateErr)
@@ -119,7 +129,7 @@ func (handler *Handler) UpdateThread(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Thread has been updated successfully."})
 }
 
-func (handler *Handler) DeleteThread(c *gin.Context) {
+func (handler *ThreadHandler) DeleteThread(c *gin.Context) {
 	ID, castIDErr := strconv.ParseUint(c.Param("id"), 10, 32)
 
 	if castIDErr != nil {
@@ -128,7 +138,7 @@ func (handler *Handler) DeleteThread(c *gin.Context) {
 		return
 	}
 
-	deleteErr := handler.Repository.DeleteThreadById(uint(ID))
+	deleteErr := handler.repository.Delete(uint(ID))
 
 	if deleteErr != nil && errors.Is(gorm.ErrRecordNotFound, deleteErr) {
 		log.Println(deleteErr)

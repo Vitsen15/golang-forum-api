@@ -4,32 +4,39 @@ import (
 	"go_forum/main/database"
 	"go_forum/main/handler"
 	"go_forum/main/repository"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 func Run() error {
-	var router = gin.New()
+	router := gin.New()
+	dbConnection := database.Connection()
 
-	Repository := repository.CreateRepository(database.Connection())
-	Handler := handler.CreateHandler(Repository)
+	// Init thread handler and repository.
+	threadRepository := repository.CreateGORMThreadRepository(dbConnection)
+	threadHandler := handler.CreateThreadHandler(threadRepository)
+
+	// Init reply handler and repository.
+	replyRepository := repository.CreateGORMReplyRepository(dbConnection)
+	replyHandler := handler.CreateReplyHandler(replyRepository)
 
 	// Default route to show if API is working.
-	router.GET("/", Handler.DefaultHandler)
+	router.GET("/", func(c *gin.Context) { c.JSON(http.StatusOK, gin.H{"message": "API server is working!"}) })
 
 	// Thread routes.
-	router.GET("/thread", Handler.GetAllThreads)
-	router.GET("/thread/:id", Handler.GetThreadById)
-	router.GET("/thread/:id/replies", Handler.GetThreadRepliesById)
-	router.POST("/thread", Handler.CreateThread)
-	router.PUT("/thread/:id", Handler.UpdateThread)
-	router.DELETE("/thread/:id", Handler.DeleteThread)
+	router.GET("/thread", threadHandler.GetAllThreads)
+	router.GET("/thread/:id", threadHandler.GetThreadById)
+	router.GET("/thread/:id/replies", threadHandler.GetThreadRepliesById)
+	router.POST("/thread", threadHandler.CreateThread)
+	router.PUT("/thread/:id", threadHandler.UpdateThread)
+	router.DELETE("/thread/:id", threadHandler.DeleteThread)
 
 	//Reply routes.
-	router.GET("/reply/:id", Handler.GetReplyById)
-	router.POST("/reply", Handler.CreateReply)
-	router.PUT("/reply/:id", Handler.UpdateReply)
-	router.DELETE("/reply/:id", Handler.DeleteReply)
+	router.GET("/reply/:id", replyHandler.GetReplyById)
+	router.POST("/reply", replyHandler.CreateReply)
+	router.PUT("/reply/:id", replyHandler.UpdateReply)
+	router.DELETE("/reply/:id", replyHandler.DeleteReply)
 
 	return router.Run(":8080")
 }
