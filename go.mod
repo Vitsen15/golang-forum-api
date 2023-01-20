@@ -5,6 +5,7 @@ go 1.19
 require (
 	github.com/gin-gonic/gin v1.8.2
 	github.com/go-faker/faker/v4 v4.0.0-beta.4
+	github.com/golang/mock v1.5.0
 	github.com/spf13/viper v1.14.0
 	golang.org/x/crypto v0.4.0
 	gorm.io/driver/postgres v1.4.6
