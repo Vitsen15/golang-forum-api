@@ -6,7 +6,7 @@ import (
 )
 
 type Thread struct {
-	ID        uint           `gorm:"primarykey" faker:"-"`
+	ID        uint           `gorm:"primarykey" `
 	UserID    uint           `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"UserID,string" binding:"required" faker:"-"`
 	User      User           `json:"-" faker:"-"`
 	Replies   []Reply        `json:"-" faker:"-"`

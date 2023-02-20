@@ -1,12 +1,13 @@
 package entity
 
 import (
-	"gorm.io/gorm"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type Reply struct {
-	ID        uint           `gorm:"primarykey"`
+	ID        uint           `gorm:"primarykey" faker:"-"`
 	ThreadID  uint           `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"ThreadID,string" binding:"required" faker:"-"`
 	Thread    Thread         `json:"-" binding:"-" faker:"-"`
 	UserID    uint           `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"UserID,string" binding:"required" faker:"-"`

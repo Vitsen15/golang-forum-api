@@ -10,7 +10,7 @@ import (
 var ReplyID uint = 1
 
 func CreateReplyEntity(user entity.User, thread entity.Thread) entity.Reply {
-	//Fill Thread entity with fake data.
+	//Fill Reply entity with fake data.
 	reply := entity.Reply{}
 	if err := faker.FakeData(&reply); err != nil {
 		log.Println("Reply generation error", err)
