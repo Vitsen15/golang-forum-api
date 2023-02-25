@@ -11,3 +11,12 @@ This is educational purpose project, it contains threads and replies to which us
 Launch steps:
 * Copy .env.sample to .env and setup configs for database, ports forwarding etc.
 * Build project by running ```docker-compose up```.
+
+## Database
+
+![DB tables structure.](go_pet.drawio.svg "Table structure")
+
+Database structure is migrated by gorm AutoMigrate functionality.
+And then seeded on first launch, when seeds are done, the `./isSeeded` file generated
+to prevent seeding on next launches.
+
