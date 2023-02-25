@@ -14,9 +14,8 @@ Launch steps:
 
 ## Database
 
-![DB tables structure.](go_pet.drawio.svg "Table structure")
+![DB tables structure.](go_pet.drawio.svg "Tables structure")
 
 Database structure is migrated by gorm AutoMigrate functionality.
 And then seeded on first launch, when seeds are done, the `./isSeeded` file generated
 to prevent seeding on next launches.
-
