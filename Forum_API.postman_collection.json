@@ -1,0 +1,384 @@
+{
+	"info": {
+		"_postman_id": "1553104b-75e6-4014-8569-00bdfa9adaa9",
+		"name": "Forum API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "6478821"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "login",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "Temp123#",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "email@domain.com",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/auth/login",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "thread",
+			"item": [
+				{
+					"name": "Get all threads",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VybmFtZSI6ImVtYWlsQGRvbWFpbi5jb20iLCJleHAiOjE2Nzc4NDUxMjl9.h_nuZwYSCMxdeqzCdRiJh6KJnag8N0qHcQduePk3YbE",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/thread/",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"thread",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get thread by ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VybmFtZSI6ImVtYWlsQGRvbWFpbi5jb20iLCJleHAiOjE2Nzc4NDMzMTB9.cduNLvIv_FRb3Id3DibHBiPfIcrYnGZ7lsPhYoCXn6o",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/thread/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"thread",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get thread replies",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VybmFtZSI6ImVtYWlsQGRvbWFpbi5jb20iLCJleHAiOjE2Nzc4NDUxMjl9.h_nuZwYSCMxdeqzCdRiJh6KJnag8N0qHcQduePk3YbE",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/thread/1/replies",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"thread",
+								"1",
+								"replies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create thread",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VybmFtZSI6ImVtYWlsQGRvbWFpbi5jb20iLCJleHAiOjE2Nzc4NDMzMTB9.cduNLvIv_FRb3Id3DibHBiPfIcrYnGZ7lsPhYoCXn6o",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"UserID\" : \"1\",\n    \"Title\" : \"New thread title!\",\n    \"Body\" : \"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/thread",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"thread"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update thread",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VybmFtZSI6ImVtYWlsQGRvbWFpbi5jb20iLCJleHAiOjE2Nzc4NDMzMTB9.cduNLvIv_FRb3Id3DibHBiPfIcrYnGZ7lsPhYoCXn6o",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"UserID\" : \"1\",\n    \"Title\" : \"The updated thread.\",\n    \"Body\": \"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/thread/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"thread",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete thread",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VybmFtZSI6ImVtYWlsQGRvbWFpbi5jb20iLCJleHAiOjE2Nzc4NDMzMTB9.cduNLvIv_FRb3Id3DibHBiPfIcrYnGZ7lsPhYoCXn6o",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/thread/2",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"thread",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "reply",
+			"item": [
+				{
+					"name": "Get reply by id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VybmFtZSI6ImVtYWlsQGRvbWFpbi5jb20iLCJleHAiOjE2Nzc4NDMzMTB9.cduNLvIv_FRb3Id3DibHBiPfIcrYnGZ7lsPhYoCXn6o",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/reply/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"reply",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create reply",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VybmFtZSI6ImVtYWlsQGRvbWFpbi5jb20iLCJleHAiOjE2Nzc4NDUxMjl9.h_nuZwYSCMxdeqzCdRiJh6KJnag8N0qHcQduePk3YbE",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"ThreadID\" : \"1\",\n    \"UserID\" : \"1\",\n    \"Body\" : \"At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/reply",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"reply"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update reply",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VybmFtZSI6ImVtYWlsQGRvbWFpbi5jb20iLCJleHAiOjE2Nzc4NDUxMjl9.h_nuZwYSCMxdeqzCdRiJh6KJnag8N0qHcQduePk3YbE",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"ThreadID\" : \"1\",\n    \"UserID\" : \"2\",\n    \"Body\" : \"Updated reply text.\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/reply/10",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"reply",
+								"10"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete reply",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VybmFtZSI6ImVtYWlsQGRvbWFpbi5jb20iLCJleHAiOjE2Nzc4NDUxMjl9.h_nuZwYSCMxdeqzCdRiJh6KJnag8N0qHcQduePk3YbE",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/reply/11",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"reply",
+								"11"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
