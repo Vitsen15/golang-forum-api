@@ -14,7 +14,7 @@ Launch steps:
 
 ## Database
 
-![DB tables structure.](go_pet.drawio.svg "Tables structure")
+![DB tables structure.](assets/go_pet.drawio.svg "Tables structure")
 
 Database structure is migrated by gorm AutoMigrate functionality.
 And then seeded on first launch, when seeds are done, the `./isSeeded` file generated
@@ -24,7 +24,7 @@ to prevent seeding on next launches.
 
 Project supports JWT authentication by route: ```/auth/login``` with credentials in Basic Auth header.
 
-You can try it by yourself in [postman collection.](Forum_API.postman_collection.json).
+You can try it by yourself in [postman collection](assets/Forum_API.postman_collection.json).
 
 Credentials for seeded user:
 
