@@ -2,7 +2,7 @@
 // Source: repository/reply_repository.go
 
 // Package mock_repository is a generated GoMock package.
-package mock_repository
+package repository
 
 import (
 	entity "go_forum/main/entity"

@@ -2,7 +2,8 @@ package handler
 
 import (
 	"go_forum/main/entity"
-	"go_forum/main/repository/mock_repository"
+	"go_forum/main/handler"
+	"go_forum/main/test/mock/repository"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -21,12 +22,12 @@ func TestGetReplyById(t *testing.T) {
 	mockController := gomock.NewController(t)
 	defer mockController.Finish()
 	reply := entity.Reply{ID: 1, UserID: 1, Body: "Reply body"}
-	mock := mock_repository.NewMockReplyRepository(mockController)
+	mock := repository.NewMockReplyRepository(mockController)
 	mock.EXPECT().Get(uint(1)).Return(&reply, nil).Times(1)
 
 	router := gin.Default()
 	responseRecorder := httptest.NewRecorder()
-	replyHandler := CreateReplyHandler(mock)
+	replyHandler := handler.CreateReplyHandler(mock)
 	request, _ := http.NewRequest("GET", "/reply/1", nil)
 
 	router.GET("/reply/:id", replyHandler.GetReplyById)
@@ -45,7 +46,7 @@ func TestGetReplyByIdWithBadId(t *testing.T) {
 
 	router := gin.Default()
 	responseRecorder := httptest.NewRecorder()
-	replyHandler := CreateReplyHandler(mock_repository.NewMockReplyRepository(mockController))
+	replyHandler := handler.CreateReplyHandler(repository.NewMockReplyRepository(mockController))
 	request, _ := http.NewRequest("GET", "/reply/bad_id", nil)
 
 	router.GET("/reply/:id", replyHandler.GetReplyById)
@@ -61,12 +62,12 @@ func TestGetReplyByIdWithBadId(t *testing.T) {
 func TestGetReplyByIdNotFound(t *testing.T) {
 	mockController := gomock.NewController(t)
 	defer mockController.Finish()
-	mock := mock_repository.NewMockReplyRepository(mockController)
+	mock := repository.NewMockReplyRepository(mockController)
 	mock.EXPECT().Get(uint(228)).Return(nil, gorm.ErrRecordNotFound).Times(1)
 
 	router := gin.Default()
 	responseRecorder := httptest.NewRecorder()
-	replyHandler := CreateReplyHandler(mock)
+	replyHandler := handler.CreateReplyHandler(mock)
 	request, _ := http.NewRequest("GET", "/reply/228", nil)
 
 	router.GET("/reply/:id", replyHandler.GetReplyById)
@@ -82,12 +83,12 @@ func TestGetReplyByIdNotFound(t *testing.T) {
 func TestCreateReply(t *testing.T) {
 	mockController := gomock.NewController(t)
 	defer mockController.Finish()
-	mock := mock_repository.NewMockReplyRepository(mockController)
+	mock := repository.NewMockReplyRepository(mockController)
 	mock.EXPECT().Create(&entity.Reply{ThreadID: 1, UserID: 1, Body: "New reply body"}).Return(nil).Times(1)
 
 	router := gin.Default()
 	responseRecorder := httptest.NewRecorder()
-	replyHandler := CreateReplyHandler(mock)
+	replyHandler := handler.CreateReplyHandler(mock)
 	request, _ := http.NewRequest("POST", "/reply", strings.NewReader(`{"ThreadID" : "1", "UserID" : "1", "Body" : "New reply body"}`))
 
 	router.POST("/reply", replyHandler.CreateReply)
@@ -106,7 +107,7 @@ func TestCreateReplyCouldntBindJSON(t *testing.T) {
 
 	router := gin.Default()
 	responseRecorder := httptest.NewRecorder()
-	replyHandler := CreateReplyHandler(mock_repository.NewMockReplyRepository(mockController))
+	replyHandler := handler.CreateReplyHandler(repository.NewMockReplyRepository(mockController))
 	request, _ := http.NewRequest("POST", "/reply", strings.NewReader(`{"WrongField" : "1", "UserID" : "1", "Body" : "New reply body"}`))
 
 	router.POST("/reply", replyHandler.CreateReply)
@@ -122,12 +123,12 @@ func TestCreateReplyCouldntBindJSON(t *testing.T) {
 func TestUpdateReply(t *testing.T) {
 	mockController := gomock.NewController(t)
 	defer mockController.Finish()
-	mock := mock_repository.NewMockReplyRepository(mockController)
+	mock := repository.NewMockReplyRepository(mockController)
 	mock.EXPECT().Update(&entity.Reply{ID: 1, ThreadID: 1, UserID: 1, Body: "Updated reply body"}).Return(nil).Times(1)
 
 	router := gin.Default()
 	responseRecorder := httptest.NewRecorder()
-	replyHandler := CreateReplyHandler(mock)
+	replyHandler := handler.CreateReplyHandler(mock)
 	request, _ := http.NewRequest("PUT", "/reply/1", strings.NewReader(`{"ThreadID" : "1", "UserID" : "1", "Body" : "Updated reply body"}`))
 
 	router.PUT("/reply/:id", replyHandler.UpdateReply)
@@ -146,7 +147,7 @@ func TestUpdateReplyBadId(t *testing.T) {
 
 	router := gin.Default()
 	responseRecorder := httptest.NewRecorder()
-	replyHandler := CreateReplyHandler(mock_repository.NewMockReplyRepository(mockController))
+	replyHandler := handler.CreateReplyHandler(repository.NewMockReplyRepository(mockController))
 	request, _ := http.NewRequest("PUT", "/reply/bad_id", strings.NewReader(`{"ThreadID" : "1", "UserID" : "1", "Body" : "Updated reply body"}`))
 
 	router.PUT("/reply/:id", replyHandler.UpdateReply)
@@ -162,12 +163,12 @@ func TestUpdateReplyBadId(t *testing.T) {
 func TestUpdateReplyNotFound(t *testing.T) {
 	mockController := gomock.NewController(t)
 	defer mockController.Finish()
-	mock := mock_repository.NewMockReplyRepository(mockController)
+	mock := repository.NewMockReplyRepository(mockController)
 	mock.EXPECT().Update(&entity.Reply{ID: 228, ThreadID: 1, UserID: 1, Body: "Updated reply body"}).Return(gorm.ErrRecordNotFound).Times(1)
 
 	router := gin.Default()
 	responseRecorder := httptest.NewRecorder()
-	replyHandler := CreateReplyHandler(mock)
+	replyHandler := handler.CreateReplyHandler(mock)
 	request, _ := http.NewRequest("PUT", "/reply/228", strings.NewReader(`{"ThreadID" : "1", "UserID" : "1", "Body" : "Updated reply body"}`))
 
 	router.PUT("/reply/:id", replyHandler.UpdateReply)
@@ -186,7 +187,7 @@ func TestUpdateReplyCouldntBindJSON(t *testing.T) {
 
 	router := gin.Default()
 	responseRecorder := httptest.NewRecorder()
-	replyHandler := CreateReplyHandler(mock_repository.NewMockReplyRepository(mockController))
+	replyHandler := handler.CreateReplyHandler(repository.NewMockReplyRepository(mockController))
 	request, _ := http.NewRequest("PUT", "/reply/228", strings.NewReader(`{"WrongField" : "1", "UserID" : "1", "Body" : "Updated reply body"}`))
 
 	router.PUT("/reply/:id", replyHandler.UpdateReply)
@@ -202,12 +203,12 @@ func TestUpdateReplyCouldntBindJSON(t *testing.T) {
 func TestDeleteReply(t *testing.T) {
 	mockController := gomock.NewController(t)
 	defer mockController.Finish()
-	mock := mock_repository.NewMockReplyRepository(mockController)
+	mock := repository.NewMockReplyRepository(mockController)
 	mock.EXPECT().Delete(uint(1)).Return(nil).Times(1)
 
 	router := gin.Default()
 	responseRecorder := httptest.NewRecorder()
-	replyHandler := CreateReplyHandler(mock)
+	replyHandler := handler.CreateReplyHandler(mock)
 	request, _ := http.NewRequest("DELETE", "/reply/1", nil)
 
 	router.DELETE("/reply/:id", replyHandler.DeleteReply)
@@ -226,7 +227,7 @@ func TestDeleteReplyBadId(t *testing.T) {
 
 	router := gin.Default()
 	responseRecorder := httptest.NewRecorder()
-	replyHandler := CreateReplyHandler(mock_repository.NewMockReplyRepository(mockController))
+	replyHandler := handler.CreateReplyHandler(repository.NewMockReplyRepository(mockController))
 	request, _ := http.NewRequest("DELETE", "/reply/bad_id", nil)
 
 	router.DELETE("/reply/:id", replyHandler.DeleteReply)
@@ -242,12 +243,12 @@ func TestDeleteReplyBadId(t *testing.T) {
 func TestDeleteReplyNotFound(t *testing.T) {
 	mockController := gomock.NewController(t)
 	defer mockController.Finish()
-	mock := mock_repository.NewMockReplyRepository(mockController)
+	mock := repository.NewMockReplyRepository(mockController)
 	mock.EXPECT().Delete(uint(404)).Return(gorm.ErrRecordNotFound).Times(1)
 
 	router := gin.Default()
 	responseRecorder := httptest.NewRecorder()
-	replyHandler := CreateReplyHandler(mock)
+	replyHandler := handler.CreateReplyHandler(mock)
 	request, _ := http.NewRequest("DELETE", "/reply/404", nil)
 
 	router.DELETE("/reply/:id", replyHandler.DeleteReply)

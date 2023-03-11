@@ -2,7 +2,8 @@ package handler
 
 import (
 	"go_forum/main/entity"
-	"go_forum/main/repository/mock_repository"
+	"go_forum/main/handler"
+	"go_forum/main/test/mock/repository"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -20,7 +21,7 @@ func init() {
 func TestGetThreadById(t *testing.T) {
 	controller := gomock.NewController(t)
 	defer controller.Finish()
-	mock := mock_repository.NewMockThreadRepository(controller)
+	mock := repository.NewMockThreadRepository(controller)
 	mock.EXPECT().Get(uint(1)).Return(
 		&entity.Thread{
 			ID:     1,
@@ -31,7 +32,7 @@ func TestGetThreadById(t *testing.T) {
 
 	router := gin.Default()
 	responseRecorder := httptest.NewRecorder()
-	threadHandler := CreateThreadHandler(mock)
+	threadHandler := handler.CreateThreadHandler(mock)
 	request, _ := http.NewRequest("GET", "/thread/1", nil)
 
 	router.GET("/thread/:id", threadHandler.GetThreadById)
@@ -50,7 +51,7 @@ func TestGetThreadByIdBadId(t *testing.T) {
 
 	router := gin.Default()
 	responseRecorder := httptest.NewRecorder()
-	threadHandler := CreateThreadHandler(mock_repository.NewMockThreadRepository(controller))
+	threadHandler := handler.CreateThreadHandler(repository.NewMockThreadRepository(controller))
 	request, _ := http.NewRequest("GET", "/thread/bad_id", nil)
 
 	router.GET("/thread/:id", threadHandler.GetThreadById)
@@ -66,12 +67,12 @@ func TestGetThreadByIdBadId(t *testing.T) {
 func TestGetThreadByIdNotFound(t *testing.T) {
 	controller := gomock.NewController(t)
 	defer controller.Finish()
-	mock := mock_repository.NewMockThreadRepository(controller)
+	mock := repository.NewMockThreadRepository(controller)
 	mock.EXPECT().Get(uint(1)).Return(nil, gorm.ErrRecordNotFound).Times(1)
 
 	router := gin.Default()
 	responseRecorder := httptest.NewRecorder()
-	threadHandler := CreateThreadHandler(mock)
+	threadHandler := handler.CreateThreadHandler(mock)
 	request, _ := http.NewRequest("GET", "/thread/1", nil)
 
 	router.GET("/thread/:id", threadHandler.GetThreadById)
@@ -87,13 +88,13 @@ func TestGetThreadByIdNotFound(t *testing.T) {
 func TestGetThreadRepliesById(t *testing.T) {
 	controller := gomock.NewController(t)
 	defer controller.Finish()
-	mock := mock_repository.NewMockThreadRepository(controller)
+	mock := repository.NewMockThreadRepository(controller)
 	replies := []*entity.Reply{{ID: 1, ThreadID: 1, Body: "Reply body 1."}, {ID: 1, ThreadID: 1, Body: "Reply body 2."}}
 	mock.EXPECT().GetReplies(uint(1)).Return(replies, nil).Times(1)
 
 	router := gin.Default()
 	responseRecorder := httptest.NewRecorder()
-	threadHandler := CreateThreadHandler(mock)
+	threadHandler := handler.CreateThreadHandler(mock)
 	request, _ := http.NewRequest("GET", "/thread/1/replies", nil)
 
 	router.GET("/thread/:id/replies", threadHandler.GetThreadRepliesById)
@@ -112,7 +113,7 @@ func TestGetThreadRepliesByIdBadId(t *testing.T) {
 
 	router := gin.Default()
 	responseRecorder := httptest.NewRecorder()
-	threadHandler := CreateThreadHandler(mock_repository.NewMockThreadRepository(controller))
+	threadHandler := handler.CreateThreadHandler(repository.NewMockThreadRepository(controller))
 	request, _ := http.NewRequest("GET", "/thread/bad_id/replies", nil)
 
 	router.GET("/thread/:id/replies", threadHandler.GetThreadRepliesById)
@@ -129,12 +130,12 @@ func TestGeAllThreads(t *testing.T) {
 	controller := gomock.NewController(t)
 	defer controller.Finish()
 	threads := []*entity.Thread{{ID: 1, UserID: 1, Title: "Thead 1 title"}, {ID: 2, UserID: 2, Title: "Thead 2 title"}}
-	mock := mock_repository.NewMockThreadRepository(controller)
+	mock := repository.NewMockThreadRepository(controller)
 	mock.EXPECT().GetAll().Return(threads, nil).Times(1)
 
 	router := gin.Default()
 	responseRecorder := httptest.NewRecorder()
-	threadHandler := CreateThreadHandler(mock)
+	threadHandler := handler.CreateThreadHandler(mock)
 	request, _ := http.NewRequest("GET", "/thread", nil)
 
 	router.GET("/thread", threadHandler.GetAllThreads)
@@ -150,7 +151,7 @@ func TestGeAllThreads(t *testing.T) {
 func TestCreateThread(t *testing.T) {
 	controller := gomock.NewController(t)
 	defer controller.Finish()
-	mock := mock_repository.NewMockThreadRepository(controller)
+	mock := repository.NewMockThreadRepository(controller)
 	mock.EXPECT().Create(&entity.Thread{
 		UserID: 1,
 		Title:  "Thread title",
@@ -159,7 +160,7 @@ func TestCreateThread(t *testing.T) {
 
 	router := gin.Default()
 	responseRecorder := httptest.NewRecorder()
-	threadHandler := CreateThreadHandler(mock)
+	threadHandler := handler.CreateThreadHandler(mock)
 	request, _ := http.NewRequest("POST", "/thread", strings.NewReader(`{"UserID": "1", "Title": "Thread title", "Body": "Thread body"}`))
 
 	router.POST("/thread", threadHandler.CreateThread)
@@ -178,7 +179,7 @@ func TestCreateThreadCouldntBindJson(t *testing.T) {
 
 	router := gin.Default()
 	responseRecorder := httptest.NewRecorder()
-	threadHandler := CreateThreadHandler(mock_repository.NewMockThreadRepository(controller))
+	threadHandler := handler.CreateThreadHandler(repository.NewMockThreadRepository(controller))
 	request, _ := http.NewRequest("POST", "/thread", strings.NewReader(`{"WrongField": "1", "Title": "Thread title", "Body": "Thread body"}`))
 
 	router.POST("/thread", threadHandler.CreateThread)
@@ -194,7 +195,7 @@ func TestCreateThreadCouldntBindJson(t *testing.T) {
 func TestUpdateThread(t *testing.T) {
 	controller := gomock.NewController(t)
 	defer controller.Finish()
-	mock := mock_repository.NewMockThreadRepository(controller)
+	mock := repository.NewMockThreadRepository(controller)
 	mock.EXPECT().Update(&entity.Thread{
 		ID:     1,
 		UserID: 1,
@@ -204,7 +205,7 @@ func TestUpdateThread(t *testing.T) {
 
 	router := gin.Default()
 	responseRecorder := httptest.NewRecorder()
-	threadHandler := CreateThreadHandler(mock)
+	threadHandler := handler.CreateThreadHandler(mock)
 	request, _ := http.NewRequest("PUT", "/thread/1", strings.NewReader(`{"UserID": "1", "Title": "Thread title", "Body": "Thread body"}`))
 
 	router.PUT("/thread/:id", threadHandler.UpdateThread)
@@ -223,7 +224,7 @@ func TestUpdateThreadBadId(t *testing.T) {
 
 	router := gin.Default()
 	responseRecorder := httptest.NewRecorder()
-	threadHandler := CreateThreadHandler(mock_repository.NewMockThreadRepository(controller))
+	threadHandler := handler.CreateThreadHandler(repository.NewMockThreadRepository(controller))
 	request, _ := http.NewRequest("PUT", "/thread/bad_id", strings.NewReader(`{"UserID": "1", "Title": "Thread title", "Body": "Thread body"}`))
 
 	router.PUT("/thread/:id", threadHandler.UpdateThread)
@@ -242,7 +243,7 @@ func TestUpdateThreadCouldntbindJSON(t *testing.T) {
 
 	router := gin.Default()
 	responseRecorder := httptest.NewRecorder()
-	threadHandler := CreateThreadHandler(mock_repository.NewMockThreadRepository(controller))
+	threadHandler := handler.CreateThreadHandler(repository.NewMockThreadRepository(controller))
 	request, _ := http.NewRequest("PUT", "/thread/1", strings.NewReader(`{"WrongField": "1", "Title": "Thread title", "Body": "Thread body"}`))
 
 	router.PUT("/thread/:id", threadHandler.UpdateThread)
@@ -258,7 +259,7 @@ func TestUpdateThreadCouldntbindJSON(t *testing.T) {
 func TestUpdateThreadNonFound(t *testing.T) {
 	controller := gomock.NewController(t)
 	defer controller.Finish()
-	mock := mock_repository.NewMockThreadRepository(controller)
+	mock := repository.NewMockThreadRepository(controller)
 	mock.EXPECT().Update(&entity.Thread{
 		ID:     404,
 		UserID: 1,
@@ -268,7 +269,7 @@ func TestUpdateThreadNonFound(t *testing.T) {
 
 	router := gin.Default()
 	responseRecorder := httptest.NewRecorder()
-	threadHandler := CreateThreadHandler(mock)
+	threadHandler := handler.CreateThreadHandler(mock)
 	request, _ := http.NewRequest("PUT", "/thread/404", strings.NewReader(`{"UserID": "1", "Title": "Thread title", "Body": "Thread body"}`))
 
 	router.PUT("/thread/:id", threadHandler.UpdateThread)
@@ -284,12 +285,12 @@ func TestUpdateThreadNonFound(t *testing.T) {
 func TestDeleteThread(t *testing.T) {
 	controller := gomock.NewController(t)
 	defer controller.Finish()
-	mock := mock_repository.NewMockThreadRepository(controller)
+	mock := repository.NewMockThreadRepository(controller)
 	mock.EXPECT().Delete(uint(1)).Return(nil).Times(1)
 
 	router := gin.Default()
 	responseRecorder := httptest.NewRecorder()
-	threadHandler := CreateThreadHandler(mock)
+	threadHandler := handler.CreateThreadHandler(mock)
 	request, _ := http.NewRequest("DELETE", "/thread/1", nil)
 
 	router.DELETE("/thread/:id", threadHandler.DeleteThread)
@@ -308,7 +309,7 @@ func TestDeleteThreadBadId(t *testing.T) {
 
 	router := gin.Default()
 	responseRecorder := httptest.NewRecorder()
-	threadHandler := CreateThreadHandler(mock_repository.NewMockThreadRepository(controller))
+	threadHandler := handler.CreateThreadHandler(repository.NewMockThreadRepository(controller))
 	request, _ := http.NewRequest("DELETE", "/thread/bad_id", nil)
 
 	router.DELETE("/thread/:id", threadHandler.DeleteThread)
@@ -324,12 +325,12 @@ func TestDeleteThreadBadId(t *testing.T) {
 func TestDeleteThreadNotFound(t *testing.T) {
 	controller := gomock.NewController(t)
 	defer controller.Finish()
-	mock := mock_repository.NewMockThreadRepository(controller)
+	mock := repository.NewMockThreadRepository(controller)
 	mock.EXPECT().Delete(uint(1)).Return(gorm.ErrRecordNotFound).Times(1)
 
 	router := gin.Default()
 	responseRecorder := httptest.NewRecorder()
-	threadHandler := CreateThreadHandler(mock)
+	threadHandler := handler.CreateThreadHandler(mock)
 	request, _ := http.NewRequest("DELETE", "/thread/1", nil)
 
 	router.DELETE("/thread/:id", threadHandler.DeleteThread)
