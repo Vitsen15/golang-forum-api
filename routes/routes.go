@@ -4,7 +4,7 @@ import (
 	"go_forum/main/database"
 	"go_forum/main/handler"
 	"go_forum/main/middleware"
-	"go_forum/main/repository"
+	"go_forum/main/repository/GORM"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -15,9 +15,9 @@ func Run() error {
 	dbConnection := database.Connection()
 
 	// Init thread handler and repositories.
-	userRepository := repository.CreateGORMUserRepository(dbConnection)
-	threadRepository := repository.CreateGORMThreadRepository(dbConnection)
-	replyRepository := repository.CreateGORMReplyRepository(dbConnection)
+	userRepository := GORM.CreateUserRepository(dbConnection)
+	threadRepository := GORM.CreateThreadRepository(dbConnection)
+	replyRepository := GORM.CreateReplyRepository(dbConnection)
 
 	// Init reply handlers.
 	userHandler := handler.CreateAuthHandler(userRepository)

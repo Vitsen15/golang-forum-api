@@ -3,7 +3,6 @@ package handler
 import (
 	"errors"
 	"go_forum/main/entity"
-	"go_forum/main/repository"
 	"log"
 	"net/http"
 	"strconv"
@@ -12,11 +11,20 @@ import (
 	"gorm.io/gorm"
 )
 
-type ThreadHandler struct {
-	repository repository.ThreadRepository
+type ThreadRepository interface {
+	Create(*entity.Thread) error
+	Update(thread *entity.Thread) error
+	Delete(id uint) error
+	Get(id uint) (*entity.Thread, error)
+	GetAll() ([]*entity.Thread, error)
+	GetReplies(id uint) ([]*entity.Reply, error)
 }
 
-func CreateThreadHandler(threadRepository repository.ThreadRepository) *ThreadHandler {
+type ThreadHandler struct {
+	repository ThreadRepository
+}
+
+func CreateThreadHandler(threadRepository ThreadRepository) *ThreadHandler {
 	return &ThreadHandler{repository: threadRepository}
 }
 

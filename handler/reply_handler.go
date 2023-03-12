@@ -3,7 +3,6 @@ package handler
 import (
 	"errors"
 	"go_forum/main/entity"
-	"go_forum/main/repository"
 	"log"
 	"net/http"
 	"strconv"
@@ -12,11 +11,18 @@ import (
 	"gorm.io/gorm"
 )
 
-type ReplyHandler struct {
-	repository repository.ReplyRepository
+type ReplyRepository interface {
+	Create(reply *entity.Reply) error
+	Update(reply *entity.Reply) error
+	Delete(id uint) error
+	Get(id uint) (*entity.Reply, error)
 }
 
-func CreateReplyHandler(repository repository.ReplyRepository) *ReplyHandler {
+type ReplyHandler struct {
+	repository ReplyRepository
+}
+
+func CreateReplyHandler(repository ReplyRepository) *ReplyHandler {
 	return &ReplyHandler{repository: repository}
 }
 

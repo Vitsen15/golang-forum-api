@@ -4,9 +4,9 @@ import (
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"go_forum/main/entity"
 	authEntity "go_forum/main/entity/auth"
 	authHelper "go_forum/main/helper/auth"
-	"go_forum/main/repository"
 	"go_forum/main/security"
 	"gorm.io/gorm"
 	"log"
@@ -14,11 +14,15 @@ import (
 	"time"
 )
 
-type AuthHandler struct {
-	userRepository repository.UserRepository
+type UserRepository interface {
+	GetByEmail(email string) (*entity.User, error)
 }
 
-func CreateAuthHandler(userRepository repository.UserRepository) *AuthHandler {
+type AuthHandler struct {
+	userRepository UserRepository
+}
+
+func CreateAuthHandler(userRepository UserRepository) *AuthHandler {
 	return &AuthHandler{userRepository: userRepository}
 }
 
